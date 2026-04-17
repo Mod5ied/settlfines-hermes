@@ -1,0 +1,1136 @@
+{
+  "name": "Email System — Campaigns + Transactional",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Emails"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Draft"
+            }
+          ]
+        },
+        "options": {
+          "returnAllMatches": false
+        }
+      },
+      "id": "get-email",
+      "name": "get email",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        460
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Emails"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Sent",
+            "Sent Date": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [
+            "Email ID"
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-rows",
+      "name": "Update row(s)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        460
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Subscribers"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Subscribed"
+            }
+          ]
+        },
+        "options": {
+          "returnAllMatches": true
+        }
+      },
+      "id": "get-subscribed-email-list",
+      "name": "get-subscribed-email-list",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        460
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst emailData = $('get email').first().json;\nconst N8N_WEBHOOK_BASE_URL = 'YOUR_N8N_WEBHOOK_URL';\nconst results = [];\nfor (const item of items) {\n  const subscriberEmail = item.json.Email;\n  const subscriberName = item.json.Name || '';\n  const emailId = emailData['Email ID'];\n  const trackingId = Buffer.from(`${emailId}-${subscriberEmail}-${Date.now()}`).toString('base64url');\n  let htmlBody = emailData['HTML Body'] || emailData['Body'] || '';\n  htmlBody = htmlBody.replace(/href=\"(https?:\\/\\/[^\"]+)\"/gi, (match, url) => {\n    return `href=\"${N8N_WEBHOOK_BASE_URL}/track-click?tid=${trackingId}&url=${encodeURIComponent(url)}\"`;\n  });\n  const pixel = `<img src=\"${N8N_WEBHOOK_BASE_URL}/track-open?tid=${trackingId}\" width=\"1\" height=\"1\" style=\"display:none;\" />`;\n  htmlBody = htmlBody.includes('</body>') ? htmlBody.replace('</body>', `${pixel}</body>`) : htmlBody + pixel;\n  const unsub = `<div style=\"margin-top:30px;padding-top:15px;border-top:1px solid #eee;text-align:center;font-size:12px;color:#999;\"><p><a href=\"${N8N_WEBHOOK_BASE_URL}/unsubscribe?email=${encodeURIComponent(subscriberEmail)}\" style=\"color:#999;\">Unsubscribe</a></p></div>`;\n  htmlBody = htmlBody.includes('</body>') ? htmlBody.replace('</body>', `${unsub}</body>`) : htmlBody + unsub;\n  htmlBody = htmlBody.replace(/\\{\\{name\\}\\}/gi, subscriberName);\n  results.push({ json: { to: subscriberEmail, subject: emailData['Subject'], htmlBody } });\n}\nreturn results;"
+      },
+      "id": "code-in-javascript",
+      "name": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "to",
+              "name": "to",
+              "value": "={{ $json.to }}",
+              "type": "string"
+            },
+            {
+              "id": "subject",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "htmlBody",
+              "name": "htmlBody",
+              "value": "={{ $json.htmlBody }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-up-email-fields",
+      "name": "set up email fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.htmlBody }}",
+        "options": {}
+      },
+      "id": "send-a-message",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        460
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "manualTriggerFunction": ""
+      },
+      "id": "manual-trigger",
+      "name": "When clicking 'Execute'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Emails"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Draft"
+            }
+          ]
+        },
+        "options": {
+          "returnAllMatches": false
+        }
+      },
+      "id": "get-email-1",
+      "name": "get email1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Emails"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Sent",
+            "Sent Date": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [
+            "Email ID"
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-rows-1",
+      "name": "Update row(s)1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Subscribers"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Subscribed"
+            }
+          ]
+        },
+        "options": {
+          "returnAllMatches": true
+        }
+      },
+      "id": "get-subscribed-email-list-1",
+      "name": "get-subscribed-email-list1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst emailData = $('get email1').first().json;\nconst N8N_WEBHOOK_BASE_URL = 'YOUR_N8N_WEBHOOK_URL';\nconst results = [];\nfor (const item of items) {\n  const subscriberEmail = item.json.Email;\n  const subscriberName = item.json.Name || '';\n  const emailId = emailData['Email ID'];\n  const trackingId = Buffer.from(`${emailId}-${subscriberEmail}-${Date.now()}`).toString('base64url');\n  let htmlBody = emailData['HTML Body'] || emailData['Body'] || '';\n  htmlBody = htmlBody.replace(/href=\"(https?:\\/\\/[^\"]+)\"/gi, (match, url) => {\n    return `href=\"${N8N_WEBHOOK_BASE_URL}/track-click?tid=${trackingId}&url=${encodeURIComponent(url)}\"`;\n  });\n  const pixel = `<img src=\"${N8N_WEBHOOK_BASE_URL}/track-open?tid=${trackingId}\" width=\"1\" height=\"1\" style=\"display:none;\" />`;\n  htmlBody = htmlBody.includes('</body>') ? htmlBody.replace('</body>', `${pixel}</body>`) : htmlBody + pixel;\n  const unsub = `<div style=\"margin-top:30px;padding-top:15px;border-top:1px solid #eee;text-align:center;font-size:12px;color:#999;\"><p><a href=\"${N8N_WEBHOOK_BASE_URL}/unsubscribe?email=${encodeURIComponent(subscriberEmail)}\" style=\"color:#999;\">Unsubscribe</a></p></div>`;\n  htmlBody = htmlBody.includes('</body>') ? htmlBody.replace('</body>', `${unsub}</body>`) : htmlBody + unsub;\n  htmlBody = htmlBody.replace(/\\{\\{name\\}\\}/gi, subscriberName);\n  results.push({ json: { to: subscriberEmail, subject: emailData['Subject'], htmlBody } });\n}\nreturn results;"
+      },
+      "id": "code-in-javascript-1",
+      "name": "Code in JavaScript1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "to",
+              "name": "to",
+              "value": "={{ $json.to }}",
+              "type": "string"
+            },
+            {
+              "id": "subject",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "htmlBody",
+              "name": "htmlBody",
+              "value": "={{ $json.htmlBody }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-up-email-fields-1",
+      "name": "set up email fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.htmlBody }}",
+        "options": {}
+      },
+      "id": "send-a-message-1",
+      "name": "Send a message1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        200
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-email",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-send-email",
+      "name": "Webapp Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        760
+      ],
+      "webhookId": "send-email"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "op-pay-later",
+              "leftValue": "={{ $json.body.operation }}",
+              "rightValue": "pay_later",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-operation",
+      "name": "Check Operation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT name, subject, template FROM fine_templates WHERE name = '{{ $json.body.operation }}' LIMIT 1;",
+        "options": {}
+      },
+      "id": "fetch-template",
+      "name": "Fetch Template from Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        440,
+        700
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "",
+          "name": "Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const ejs = require('ejs');\n\n// Get template from Postgres result\nconst templateRow = $('Fetch Template from Postgres').first().json;\nconst ejsTemplate = templateRow.template;\nconst ejsSubject = templateRow.subject;\n\n// Get payload from the original webhook body\nconst webhookData = $('Webapp Webhook').first().json;\nconst payload = webhookData.body.payload || {};\n\n// Render EJS with payload data\nconst renderedBody = ejs.render(ejsTemplate, payload);\nconst renderedSubject = ejs.render(ejsSubject, payload);\n\n// Recipient must be in the payload\nconst to = payload.to || payload.email || '';\nif (!to) throw new Error('Missing \"to\" or \"email\" in payload');\n\nreturn [{\n  json: {\n    to,\n    subject: renderedSubject,\n    htmlBody: renderedBody,\n    operation: webhookData.body.operation,\n    templateName: templateRow.name\n  }\n}];"
+      },
+      "id": "render-ejs-template",
+      "name": "Render EJS Template",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.htmlBody }}",
+        "options": {}
+      },
+      "id": "send-transactional",
+      "name": "Send Transactional Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        700
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"message\": \"Email sent\", \"to\": \"{{ $json.to }}\" }",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": false, \"message\": \"Unknown operation\" }",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "respond-unknown-op",
+      "name": "Respond Unknown Operation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "track-open",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-track-open",
+      "name": "Track Open Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1100
+      ],
+      "webhookId": "track-open"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tid = $input.first().json.query.tid || '';\nlet emailId = '', subscriberEmail = '';\ntry { const d = Buffer.from(tid, 'base64url').toString(); const p = d.split('-'); if (p.length >= 3) { emailId = p[0]; subscriberEmail = p.slice(1,-1).join('-'); } } catch(e) {}\nreturn [{ json: { trackingId: tid, emailId, subscriberEmail, eventType: 'open', timestamp: new Date().toISOString() } }];"
+      },
+      "id": "parse-open-tracking",
+      "name": "Parse Open Tracking",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Tracking"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tracking ID": "={{ $json.trackingId }}",
+            "Email ID": "={{ $json.emailId }}",
+            "Subscriber Email": "={{ $json.subscriberEmail }}",
+            "Event Type": "={{ $json.eventType }}",
+            "Timestamp": "={{ $json.timestamp }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-open-event",
+      "name": "Log Open Event",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        1100
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseBody": "=",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "image/gif"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-tracking-pixel",
+      "name": "Return Tracking Pixel",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "track-click",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-track-click",
+      "name": "Track Click Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1340
+      ],
+      "webhookId": "track-click"
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $input.first().json.query || {}; const tid = q.tid || ''; const dest = decodeURIComponent(q.url || '');\nlet emailId = '', sub = '';\ntry { const d = Buffer.from(tid, 'base64url').toString(); const p = d.split('-'); if (p.length >= 3) { emailId = p[0]; sub = p.slice(1,-1).join('-'); } } catch(e) {}\nreturn [{ json: { trackingId: tid, emailId, subscriberEmail: sub, eventType: 'click', clickedUrl: dest, timestamp: new Date().toISOString() } }];"
+      },
+      "id": "parse-click-tracking",
+      "name": "Parse Click Tracking",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        1340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Tracking"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tracking ID": "={{ $json.trackingId }}",
+            "Email ID": "={{ $json.emailId }}",
+            "Subscriber Email": "={{ $json.subscriberEmail }}",
+            "Event Type": "={{ $json.eventType }}",
+            "Clicked URL": "={{ $json.clickedUrl }}",
+            "Timestamp": "={{ $json.timestamp }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-click-event",
+      "name": "Log Click Event",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        1340
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "redirect",
+        "redirectURL": "={{ $json.clickedUrl }}",
+        "options": {}
+      },
+      "id": "redirect-to-url",
+      "name": "Redirect to URL",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        1340
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "unsubscribe",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-unsubscribe",
+      "name": "Unsubscribe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1580
+      ],
+      "webhookId": "unsubscribe"
+    },
+    {
+      "parameters": {
+        "jsCode": "const email = $input.first().json.query.email || '';\nreturn [{ json: { email: decodeURIComponent(email), timestamp: new Date().toISOString() } }];"
+      },
+      "id": "parse-unsubscribe",
+      "name": "Parse Unsubscribe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        1580
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Subscribers"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Unsubscribed",
+            "Unsubscribed Date": "={{ $json.timestamp }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-subscriber-status",
+      "name": "Mark as Unsubscribed",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        1580
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<!DOCTYPE html><html><head><title>Unsubscribed</title></head><body style=\"font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;background:#f5f5f5;\"><div style=\"text-align:center;padding:40px;background:white;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1);\"><h1>Unsubscribed</h1><p>You will no longer receive our newsletter.</p></div></body></html>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-unsubscribe",
+      "name": "Unsubscribe Confirmation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        1580
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "get email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get email": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row(s)": {
+      "main": [
+        [
+          {
+            "node": "get-subscribed-email-list",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-subscribed-email-list": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "set up email fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set up email fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute'": {
+      "main": [
+        [
+          {
+            "node": "get email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get email1": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row(s)1": {
+      "main": [
+        [
+          {
+            "node": "get-subscribed-email-list1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-subscribed-email-list1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "set up email fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set up email fields1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webapp Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Operation": {
+      "main": [
+        [
+          {
+            "node": "Fetch Template from Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Unknown Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Template from Postgres": {
+      "main": [
+        [
+          {
+            "node": "Render EJS Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render EJS Template": {
+      "main": [
+        [
+          {
+            "node": "Send Transactional Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Transactional Email": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Track Open Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Open Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Open Tracking": {
+      "main": [
+        [
+          {
+            "node": "Log Open Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Open Event": {
+      "main": [
+        [
+          {
+            "node": "Return Tracking Pixel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Track Click Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Click Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Click Tracking": {
+      "main": [
+        [
+          {
+            "node": "Log Click Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Click Event": {
+      "main": [
+        [
+          {
+            "node": "Redirect to URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unsubscribe Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Unsubscribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Unsubscribe": {
+      "main": [
+        [
+          {
+            "node": "Mark as Unsubscribed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark as Unsubscribed": {
+      "main": [
+        [
+          {
+            "node": "Unsubscribe Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

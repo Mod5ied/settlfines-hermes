@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overdue Notice — PCN <%= pcn_number %>
+  </title>
+</head>
+
+<body style="margin:0; padding:0; background-color:#f8fafc; font-family:system-ui, -apple-system, sans-serif;">
+  <div style="background-color:#f8fafc; padding:40px 20px;">
+    <div
+      style="max-width:600px; margin:0 auto; background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg, #1e40af 0%, #f97316 100%); padding:32px 24px; text-align:center;">
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAABCCAYAAAB5PoBcAAAABmJLR0QA/wD/AP+gvaeTAAAYiUlEQVR4nO2dd7geVbWH30W7JNKkF5UgoUjveCUKhnZROqIoIiIIBFFEitIkgqgQwUsXpKiAoUoXAQ0QQJCOUoQECEIAgQChJCQk+d0/1uRy+DJ7vj3z7e/kJOz3ec4DmbLWOnNmdl3F6IGk/YA1ScerwNFmNiXmYkl7A+sm1P86cJSZvZdQZiaTyWRakbSUpDFKy29q6F9M0qjE+i+SZN18bplMJpMBJK0i6bXEjfgRNfQPlPRyYv1Du/jIMplMJjMdSZ+T9G7CBnyapN1r6N9A0jsJ9UvSkG4+s0wmk8kUSPqKpKkJG/DJkraooX9bSVMS6p8iadtuPrNMJpPJFEg6NGEDLklvSlqrhv4hifW/I2nDbj6zTCaTyRRIOjlxIz5W0idq6D8psf6XJQ3s5jPLZDKZDwNtvZMkzQFcBuyYUO9jwCAzez1CvwEXALsm1P94of+1hDIzmUZI2izy0qlmdktCvZ8GNgI2AD4BLFj89Otx2S/M7ISK+w8F1gDmAp4ETjGz61LZmJkNkNRP0p2JZwK3SvqvSP3zSPprYv0jJc3b7WeXybSjxjv7VgJdJmlPSY9E6jw6IGdt+b5mK9MkbdepnZnZDEmLSPpXjZc9huHyGU6M/oUlPZ5Y/6Wx+jN9D0n9JX205GeeLuiaI6Br/gSyY+moA5G0hKSban4joQ7kmop7nurEzsxsiqRPSnqp5gvYjp/X0D9A0ouJ9Z/YzWeW6R4K78+lXO6crmuFgK67EsiOpXEHIml+SQ/W0DWdUAfyfJv7Fmn+RDKzCrVG32b2NLA18E5CG34k6buR+scAXwTeTqj/B5K+n1BeJtMX+TUQ7QEZQbv0RFMT6sr0Ueaqe4OZ3SfpK8BVTe4P8CtJz5vZlRH6H5D0ZeCahPpPlPScmV2RSF4mU4ezW/69JJAsZknSKsAugdPvAhcCI4BXSs4/HbjvHmDZwLlHzeyNWkZmPlxI2rvBdLiKCZL+u4b+PRPrnyhpUDefWSYtmk2WsEp0bRTQ1WgJS9LpAXkvSlqtocyVJL1VIvM9SYObyMzMejTeQDazs4HjE9rSD7hG0oqR+s8Fjk2of17gKkkrJZSZyfQFPh84voeZPdJEoJk9AawHnAncDdyLz2Q+a2YjGlmZ+XAhdwn8XWB005TRkhavof+8xPqflrRkt59dpnOUZyAxshaWu9bO8J6ntjvz4aMjF1YzE7AX8Jc05gCwPHCdpI9E6t8HuDGh/uUK/fMllJnJzCyWpDxg+B+9bUhm9qPjGIiiWNNOwMOdm/P/rA9cLGnOSP07Aw8m1L8ucImkVJv0mczMYuHA8ZSejJkPKUmC6MzsTdy99rkU8gq2Bk6P1P9Wof/ZhPq/gK/vZjKzMqGZtHrVisxsSbIRtpmNlfQF4HZgoURi95H0lJkNi9D/YqH/DuCjifTvJWmMmR2XSF5j5BHzq+F5iwbiI8uFgAnAm8AbwD+BB8ysVyKBixni2sAgYGXcrbM/7hAxHi8p/G/gIeAeM3uyN+zKfIDZshqnPEfeOvhG/ip4Rzk/8Brujvwy8AD+3vVaSWt5ZoJNCttWAhYrbJvC+9/po/iKzZ294e5c2PTfePuxHLAA/o2+Udj0Iv6sHqxrT/KXS9ImwJ+BqDxXMSKB3c3sgkj9nwNuSqx/DzP7XSJ59ZS7V9p+wFeBKOcC3Hf/QuA8M0s5K5tu07LAd4Dda9gE3pH8Hvi1mU2soe9LwJdLTq0FrFBy/O94xxXLYdM73WLv67ySa+YDtio5Pg6PoYhlpJmdVnWBpI3wgVArb5tZMHWKpH5A63u6JPDZksufxWM5qnjRzA7oIf8HwKfb3DOda8zswshrkbQD/o735Fwzu7Hluv7AAcDewIAI0ePwZzLMzF6KtacukjbHv9OtiR+YTwJuAM40s5sS2zMHsB2+R71FpE1T8Xf5AuASM5uc0qZoJH014PnRlEmSNq2hf6YWw0qBPM/SeeqsqNZEScfKP7oUNs0nT6/fabXKf0sKBbaV6T26Q33tWL+HroW7rOv3Eb9vIy8sSQsktvWJFvmX1bi3lou/pMNLZHyn5ZqNJT3X8Hd5Q93xzltT0m0NberJnxUZwhBh0yDFJ8sM8YSksgHTB+hKIkEzGw78OKHIeYA/SlojUv8lwGEJ9c8NXK4axbA6QdKq+Gh9D6CtI0EF8wJHArdJWqxDm9YubDqQzmd3HweGy13A23rbZTKSvo57e36soYgFgQskHZLQpgPxWdznEojbErhfHXZy8lnibcCqHdqzIvAnSZXteNcy0ZrZT4ncBI9kAfwX+nik/hOAUxLqnx+4XjWKYTVB0gDgFrw+QyrWA0Y2bazl9SpG4i7WKfkGcJOkBRLLzcxGFO/f+XS+Z2vA8eqwtLU8/uw04CR8cJuK+YALJR3a0K4DgBNJ267/RIGEmpBwEz3AAfiIIVV9gGXwTmSQmY2PuP7AQn+qYlhLAzcU+tsWw6qLfN3yUnzjLcR7eEGsUbgr5jz46Gp1fGQfYmXgOKBW4khJ6wJXEvbmmc6r+MbgODzZ5nz4pvpq+MZ6iM/gHfPg3tzszMwaSFqQNJ3HdAw4TdIIM2vqynwMvgdYxTT8G30C36g2/JtYBR+IVTXyx0ua0G6vrCeS1gN+2eay1/FVhFeBt/BB8TJ4QbCq7/tISdea2QOx9iRDXrPhrg7X41oZociaD5rJxbBqPqtvVuh8RdJ3JAU9zCStJum3Cu8/TZUUvQQg3w8YU2HTJEmnype3QjLmkfRFSTe3eaYnNXheORK9vaytArKinFJaZK0habOWn1ChtyR7IJKGlhx/QdJxkjaRtLT8HVtA0sryHHkxNU+iy0i02Lm9qvd3x0jaX9KiFTKWkPQ9Ve/nTJK0YQ27bq+QdaukwQrUPiqe346qrrd0fZPnlQRJi0kaVWFcEy6Su/LF6F9EvimUkuGx+ms8p7sDuh6VtFQNObuovFqc5GuksXIuqPj9H1LNTT9JO0saH5A3TTU+mEJe7kDay0rWgQTkXxiQn6IDOUjSuB7/nirpx3Jvs3byBqu6dtErqll4TNKikl6tkHlyjG095PWTdHaFvEcVEcwsHziGOEHx7eS8kv4YkDNZFZ1i15E0UNLLFb9oE4bW0N+NYlg/S/h8FlS559gkNUjwKOmogM03RN4/SOGR1p1qvp+ygcKdyMiasnIH0l7WrNyB9JxJTJa0TU2Zy0kaG7BPqll6V9KvK2QdVEdWi9zjKuR+O+L+AwP3/lU1B7nyTi00E/lS6/W9Vs7VzEbjPtITEoo9WtJ+kfq7UQzrMEUWw4pgVcr/HjcUmU/rcgpQ5scdquHQytGUxwk9D2xjZo2eo5ndA+wbOP1Z1ZyFZGZrNunx/wea2bV1bjazZ/DYkmmBS3aKlSV3ntkjcPosM+uksumRwJ8C5w6K6ARCKflPLvIFRlPEZ4Wcn2ZoO3o115OZ3SP3/7+SztxTe3KKvBjVNRH6Z2oxrDaEovcfbSLMzMbLy/W2lhZt24FL+hSwWeD0vmb2WhObetg2XNKeQFlszz54IGAmM3fx3/uAM5oIMLORkq4Gdig5vW4NUXtT7nH1HNB49gGeFLYYCD9ZomMlPB1/VbBqaF+0Uap+3F26tcgZlKSK6vVkgWZ2bTFqb/RClDAnHlMw2MzaNjxmdr08QOmshPovkrSpmXWynBFq2Bu7CZrZ4Q1vbY0Ins5dZpZqM+3nlHcg20ma08xySdTMdIbVHUm3cBblHciKkvpFZkX4WuD4L5rOxntiZs9K+gPwzZLTO1DdgYT0N3L0MbN/4QO5tvTaElZPzOxM4FcJRfYHrpU0MFL/TC2GFeA/geMzo7rbxoHjv0mo4xZ8OayVhfFszJkMeHqNTtN83IG7v7cyF/CpdjcXy1fLlZyaiKf9SEUo9cuWbe6baW3HTOlACn6MxwykYjGgzoj7GMIPvgmL0ln0/ZOU16ReR1JozyA5kuamvAGfBlydSo+ZTSM8qlonlZ7MLM+oThMOFjOEsYHToXT3PflM4PhfikzgqbgDr1HfykBVB9veGTh+hCIDr5syUzoQufvcpcy4Pt8J/yRyLbJoJC8Flkio/1Hge01vLpZsrgqcPkPSOWpYv7oma+IzqlYe73Tvo4T7AsdXSawnM+tSNqhqQmiwGpMFIZRAMtRwN8LMJuHt2AynqJ4p3YgHBrayFHCfpCGqiB/rhF7fA5GnAL+I8symTXkG2DImOrzQfwFePyQVzwNfSNDAHouvtba6yBqwJ7CnpNfwhvexQu9L+EbeM2aWoh7LMoHjKxa6UxLa30nZsWdmbVKN8CcFjsd0IKHg26Mk/bChPSFCEeHBb8LMJkg6Bigre7E4vt98uqRReNr20bzfbozFZ3lvNjG2VzsQeSTkBcAM/sQd8CqwlZm9GKHf8A21ryTUPw7YwszqpA8vxcyeKzb4zyM8O1wYT888Q3ZgSW/jHcsIfN14ZIPN6NCUfm7S1VlpR86NlZlOtwtfxQT+hb6JjzDjYK9btPsmTsb3SkLek4YnSCzdp5X0AnA/Ppv5U+EC3ZZeW8IqGu8zCXv4NGECsG1MnESh/3R8JJ+KicB2ZvZ4KoFF3ZG9KF8Lbcd8eMGpH+GdyChJB6te0F/KZcWmpExQl8l0Ssw+Sbep9Kgq8shtC1zXUP7SwDbAacBTkm6Q1zippDf3QIbhvtSpeA/YsYbr7C+AIYn1f8nMkq6DApjZ+XilvzqFispYDn/uj8irNcYQnYohk/mQMEt8E4U78rZ4wGMnxbMM+B88U/YVkpYOXdgrS1jylB8dBdu0igT2aq1WVqF/KNAoRXKF/n3MLBQ92jGFL/am8mJHQ/Aa7U33BgYA10k6JCJiNrRW/BS+19QbPNxLejKZGELfxJ34KkRvEPIi+wBFvMxvJQ3H91N3xStSNp3V7whsKGlLM5shqLnrHYikI0hb3AngIDNrW9mt0H8AnpYjJYcWs4SuY2b3AvcW+0er4ylPVsHrhSyDe1p8gvZrsQb8UtLbZlYVRBnyVrnczH5Uy/hMZvYg5DyyT1mj2hcoPLrOB86X10RfHy/psBLuFLAkXv5hKdr3A8sAt0pavbUscFc7EEn7Az9NLPbnZhYVhCjpW6QNWAQ4zcza5d1PThE38TAlo/Nif2c5fNlrPWAXwvWih0m63szKgvgg3IF0tZBWJtOHCX0Ty9Iw1VBvUsSqjKBkSVzSvPjAdG08gHgHypfsFgVOBXbuebBreyCSdsc9A1JyIXBEpP7d8MjplCnX/4AXyepTmJnM7Gkzu8LMDgMG4oWjyqJv5weqMny+EDjeGzEomUxfJPRNdFo2dqZjZu+a2b1mdraZ7Yq3HaGl+Z0kfSChYlc6EEk7Aecmln8dsEdMThxJO1DtCtuEvxb6Q5k9+wxmNtXMTiac9bbKjfphyj3AVpUUSviYyczOhHLsbdSrVvQCZvYCXkH29rLTtGQwTt6ByHPsDyddtl3wP+AuZjYlQv8Whf6Uy3P3AtubWVl69L7M+ZTnm1pRgepkxdrp/SWn5sDd/PoSbd+HhITK7SYtKpbpk4Q8LTev6SI/S1C0s6FaRyv3/EfSPRBJmwEX834a5hQ8hkd5t814KWkwnq8pZbnZ0cDWHdRPnmkUaaL/wYyRtHPhucNCucBGUj662pOEyeMk7Qx8suTU6ZHPO5TBuBsfdW/qyvQhzOwZSc8z43fUH49rOyeFHnk1w7J0SM+a2cUpdNQg5An5gcqoyToQSZ/B63zMm0om7rq2VUyKEEmfxnNJpdT/ArC5mb2cUOYMSBpCeXr7/c0sVNwlllADVzV6Pxf4ITPOUDeWtLmZ3dyhTUjqj2cFaI1ufwk4IVJMaHNz+aZ2VfAGnhm2dWa9rKS5YmbHmVma4cAhJccPl3RRZEr4dmyDx6u1ciI+MJ8BSffijjM9mQbMb2adFO8LtRsfyGyRZAlL0lrA9YTzuDRhHN54t00RImnNQv/8CfWPx2c+YxLKDDFDoZaCrTsRWmTwbH25wEfTwbxhZvYU4Y20syUt2IldBYdTnhrluhq1H0YFjn8xoopbLYrly7J3cX7C6e8zsw9nUT7oWo4EpSEKb6hjAqerKjGWvZNz0Hmuv1Aq+A/Eo3TcgUhaHa9glXKDNTpFSFGD40bSphuYiJdt7a2AtscCx7eMSSdQwVGUjyT+HuEMcFLg+AC89kn/pkYVVSlDsUHn1RD1UOD4qsButYyK48HA8WOLDM+Z2ZRiUHVR4PR3JTXOxF28O3/AYzRaGY0vKYcIuREfWyyJNbFnAcLf59+ayAwpWkHSC0rLFEnbR+pfXtLYLujfMdlDikTSPQF7XpFU211Q0vclTQvIrHLj7SnjdxXP6T5JA2raNJekIyRNDcisXThI0iMBWRMkfUsBZ4EmSNq34nlcI2nxRHo2CuionZlW0lYBWUn2siRdGJBfa1Qu6fCAnKa5nVrl3xmQH53eSNKikv4TkCNJw1RzICFpaUm3Vsj8Rpv7V6+49wpJtfaDJS0k6baAvLdUXZeklqKPSxpTYXwTpkkKFa5v1f8xSU93Qf9eSR5QTSTtU2HXBElHSlqqjYw5JQ2WdHOFrGcVOXuQ9FFVDxAmyD+aspFTTzn9Je2qcGMvSRPVoN6JpB9UyJSkJyWdLO9Q9w78LFbjebzd5nlcLu8k9wno+nyEntyBvE+f6UAKOTsH5ExnlHzgUrnMK2mApGPkjXKIOxQxAFJ48ClJ/5S0vdp0bPJ3ez9JL1bImmF/ptEmuqQlgJvxSMyU/DAmRYh8pHcT5WUmO+FIM0viUdGAc4Bv4dl0W+mH1woZKukxvOjMy8DbuMfbAngA0Fq4d1WIacCQ2M01M3tdPgK6nvJcOv2Ag4GD5bUGHsLXSN8url8UL4SzJu6xUsXBZvZIjF0tnAMcSLhmwwrFTxUPElG4qHgeJxOufNkP95PfKXAe3Ivtlna6Mn0TM7tM0jl4xuwyBuJOKGdIehhfYnoFmIzvES+Ff6crUu0C/hqwW2Tc2RA81KEsdGI13LlpvKSH8CWxcYU98+L1QlYB1qA6X9YovA3qDPk07tE2vXATTovUv5CkB7qgv8wLqleRtLKqp8id0iihpaSdJL3bRbuO6/C5DZY0qQP90TXYJc0j6e4OdLXN4aY8A+lJn5qBFLLmlHRRQF4KxksqG0hW2XRIF+35j6TSQVit9WH5tOzPpC85OpyIcrDy9beb8LwtKbkE2D+xzNoUGXg/D7QtjlWTycC+EZl4SzGzK/BCNaGUDk2ZAnzPzKLS04QwsxF4kbCux+oU3lhbkXIzMTNLURRp+zrwE1rcWhMwBhhkZvfUtGkYnnE8dQGuJ4GNzKzU4zG6A5Gvm18LrJvIsOlEpQgp9F+DZ5VMyS3A7n0lRYmZPYYnNzuXNC/D34EN2mTgjbHrDnw6fA5pPpr7gQ3N7NQEsjCzq4B18EDSrlaxK0onb4wX7grFomRmY4r8c0OBQXiZ2E6ZihfcW9PMyuqix9g0DH8vUyR4nAz8L7C2mY0OXRS1ByJ3B7sOzyufkukpQkL59qfrnwe4nPT+9v/Ai1JV6u9tzGwcsJekU/F9ka/h+wmxTMZnir8xsyRLAIVdrwPflvQrPKnkLtQrPzsVuBWvenZ1jXiPWPtGAdtLWh6vYzAIX9tdnPZ7MHV1TQGOL/5GW+HlRNfH92IWobMUJ2/grvGtNAlWezUgK1UW2UcD8oONToBnAnJCrtp1uY/ybAKhrNRRmNndktbD88sNATah3t/+deAy4EQze7ITWwp7bpe0Nv7+746Xvq6TVuoFfEXmlJgYuLa/qHz3/o90GNRWwmh8alQZ5S1pTnyJa+eq6xrwFD5V7KRyV68gaS68IVwbn50siTfcC+LLQBPxzeun8Q/lb0UK527b1Q9vpD+H58gZgMfjfKSwaSIeJDkauAsYMbOed2HrIpRvFI5NOYiQe84sQnlg69vdzmyQmXnIq/dtCmyIb6h/DB+8zAe8hXcYz+Ad7+3AHd0cwEpaGJ+Zr4PHmSzY42c83qk+AzyB5/x6JNlqjHyz6OIubMqMVUQMgaQ51J3NqpcV2BTKZDKZTIdIMknndKHxfkOe+iRG/1ld0D9ePsXLZDKZTGqKxvuMLjTeEyVF7aNI+mUX9E9SZ6lBMplMJlOFpOO70HhPkReaitH/sy7onypPH57JZDKZbiBpaBca7+gUIfI0EN2gcbKzTCaTybRB0gFdarxj65jv3yX9Q7v86DKZTObDizwBWCh7aydEpQiRtLvCWVo7oaMAukwmk8lUIGm3LjXeV8rjONrp30m+R5Kaq+UxFJlMJpNJjaQdJL3XhcZ7hCJy0UvaVtLkLui/VV7lK5PJZDJdwOQVBavS+DblX2b2TruL5DUgahU9ieQJM+t6cr1MJpP5sPJ/xhsLGuYzSjcAAAAASUVORK5CYII="
+          alt="Settlfines" width="200" height="33" style="display:block; margin:0 auto;" />
+      </div>
+
+      <!-- Alert Badge -->
+      <div style="padding:24px 24px 0; text-align:center;">
+        <div
+          style="display:inline-block; background-color:#fef3c7; border:1px solid #f59e0b; border-radius:20px; padding:8px 16px;">
+          <span style="color:#92400e; font-size:14px; font-weight:600;">Overdue Notice</span>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div style="padding:24px 32px;">
+        <h2 style="font-size:20px; font-weight:700; color:#111827; margin-bottom:16px;">
+          Hi <%= user_name %>,
+        </h2>
+
+        <p style="font-size:16px; line-height:1.6; color:#374151; margin-bottom:20px;">
+          The discount period for <strong>PCN <%= pcn_number %></strong> has passed. You are now liable for the full
+          amount of <span style="color:#dc2626; font-weight:700;">
+            <%= full_amount %>
+          </span>.
+        </p>
+
+        <!-- Status Box -->
+        <div
+          style="background-color:#fef2f2; border:2px solid #fecaca; border-radius:10px; padding:20px; margin-bottom:24px;">
+          <table style="width:100%; border-collapse:collapse;">
+            <tbody>
+              <tr>
+                <td style="padding:8px 0; font-size:15px; color:#991b1b; font-weight:600;">
+                  Current Amount Due:
+                </td>
+                <td style="padding:8px 0; font-size:20px; color:#dc2626; font-weight:900; text-align:right;">
+                  <%= full_amount %>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0; font-size:14px; color:#6b7280;">
+                  Final Payment Date:
+                </td>
+                <td style="padding:8px 0; font-size:15px; color:#111827; font-weight:600; text-align:right;">
+                  <%= day_28_date %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- What Happens Next -->
+        <div style="margin-bottom:24px;">
+          <h3 style="font-size:18px; font-weight:600; color:#111827; margin-bottom:12px;">
+            What happens next?
+          </h3>
+          <p style="font-size:15px; line-height:1.6; color:#374151; margin-bottom:16px;">
+            Legally, you have until <strong>
+              <%= day_28_date %>
+            </strong> to pay this amount.
+          </p>
+
+          <div
+            style="background-color:#fffbeb; border:2px solid #fbbf24; border-radius:10px; padding:18px; border-left:6px solid #f59e0b;">
+            <p style="margin:0 0 16px; font-size:15px; font-weight:700; color:#92400e;">
+              If this remains unpaid after 28 days:
+            </p>
+
+            <div style="margin-bottom:12px;">
+              <p style="margin:0 0 4px; font-size:14px; font-weight:600; color:#78350f;">
+                &#x1F4CB; Private Fines:
+              </p>
+              <p style="margin:0; font-size:14px; color:#92400e; line-height:1.5;">
+                It will be passed to Debt Recovery, adding <strong>~&pound;60 in fees instantly</strong>.
+              </p>
+            </div>
+
+            <div>
+              <p style="margin:0 0 4px; font-size:14px; font-weight:600; color:#78350f;">
+                &#x1F3DB;&#xFE0F; Council Fines:
+              </p>
+              <p style="margin:0; font-size:14px; color:#92400e; line-height:1.5;">
+                A "Charge Certificate" will be issued, increasing the fine by 50% (to <strong>
+                  <%= escalated_amount %>
+                </strong>).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Damage Control Message -->
+        <div
+          style="background-color:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:18px; margin-bottom:28px;">
+          <p style="margin:0; font-size:15px; color:#1e40af; line-height:1.6;">
+            <strong>Please resolve this now</strong> to avoid further costs or legal escalation.
+          </p>
+        </div>
+
+        <!-- CTA Button -->
+        <div style="text-align:center;">
+          <a href="<%= cta_url %>"
+            style="display:inline-block; background-color:#f97316; color:#ffffff; font-size:16px; font-weight:600; padding:14px 32px; border-radius:10px; text-decoration:none;">
+            Resolve PCN <%= pcn_number %> Now
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="background-color:#f9fafb; padding:24px 32px; border-top:1px solid #e5e7eb;">
+        <p style="margin:0 0 8px; font-size:14px; color:#6b7280; text-align:center;">
+          Avoid debt collection by acting before <%= day_28_date %>
+        </p>
+        <p style="margin:0; font-size:12px; color:#9ca3af; text-align:center;">
+          &copy; 2026 Settlfines. We're here to help you manage fines efficiently.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your dispute was successful — PCN <%= pcn_number %></title>
+</head>
+
+<body style="margin:0; padding:0; background-color:#f8faf8; font-family:system-ui, -apple-system, sans-serif;">
+  <div style="background-color:#f8faf8; padding:40px 20px;">
+    <div style="max-width:600px; margin:0 auto; background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+
+      <!-- Header -->
+      <div style="background:#1C1917; padding:32px 24px; text-align:center;">
+        <!-- LOGO PLACEHOLDER -->
+      </div>
+
+      <!-- Result Badge -->
+      <div style="padding:28px 24px 0; text-align:center;">
+        <div style="display:inline-block; background-color:#dcfce7; border:1px solid #86efac; border-radius:20px; padding:8px 20px;">
+          <span style="color:#14532d; font-size:14px; font-weight:600;">Dispute Successful</span>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div style="padding:28px 32px;">
+        <h2 style="font-size:22px; font-weight:700; color:#111827; margin-bottom:12px;">
+          Hi <%= user_name %>,
+        </h2>
+
+        <p style="font-size:16px; line-height:1.7; color:#374151; margin-bottom:8px;">
+          We have good news. Your dispute for PCN <strong><%= pcn_number %></strong> has been reviewed and the decision has come back in your favour.
+        </p>
+
+        <p style="font-size:16px; line-height:1.7; color:#374151; margin-bottom:24px;">
+          The charge has been <strong>cancelled in full.</strong> You owe nothing.
+        </p>
+
+        <!-- PCN Result Card -->
+        <div style="background-color:#f0fdf4; border:2px solid #86efac; border-radius:10px; padding:20px; margin-bottom:28px;">
+          <p style="margin:0 0 6px; font-size:13px; color:#166534; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Case Summary</p>
+          <p style="margin:0 0 20px; font-size:20px; color:#14532d; font-weight:700;"><%= pcn_number %></p>
+
+          <div style="border-top:1px solid #bbf7d0; padding-top:16px;">
+            <table style="width:100%; border-collapse:collapse;">
+              <tbody>
+                <tr>
+                  <td style="padding:7px 0; font-size:14px; color:#166534;">Operator</td>
+                  <td style="padding:7px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;"><%= operator_name %></td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0; font-size:14px; color:#166534;">Dispute Ground</td>
+                  <td style="padding:7px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;"><%= dispute_reason %></td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0; font-size:14px; color:#166534;">Original Charge</td>
+                  <td style="padding:7px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;"><%= full_penalty_amount %></td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0; font-size:15px; color:#14532d; font-weight:700;">Amount You Owe</td>
+                  <td style="padding:7px 0; font-size:15px; color:#14532d; font-weight:700; text-align:right;">£0.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- What happens next -->
+        <h3 style="font-size:16px; font-weight:600; color:#111827; margin-bottom:12px;">What happens next</h3>
+        <p style="font-size:15px; line-height:1.7; color:#374151; margin-bottom:8px;">
+          No further action is required from you. The council or operator is legally obligated to record this cancellation. If you receive any further correspondence regarding this PCN, it may be in error — forward it to us and we will handle it.
+        </p>
+
+        <p style="font-size:15px; line-height:1.7; color:#374151; margin-bottom:28px;">
+          Keep this email as a record of the outcome.
+        </p>
+
+        <!-- CTA -->
+        <div style="text-align:center; margin-top:32px;">
+          <a href="<%= cta_url %>"
+            style="display:inline-block; background-color:#FF6900; color:#ffffff; font-size:15px; font-weight:600; padding:14px 32px; border-radius:10px; text-decoration:none;">
+            View Case Record
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="background-color:#f9fafb; padding:24px 32px; border-top:1px solid #e5e7eb;">
+        <p style="margin:0 0 8px; font-size:13px; color:#6b7280; text-align:center;">
+          Settlfines — automated parking fine dispute platform
+        </p>
+        <p style="margin:0; font-size:12px; color:#9ca3af; text-align:center;">
+          &copy; 2026 Settlfines Ltd. This is a system-generated notification.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
